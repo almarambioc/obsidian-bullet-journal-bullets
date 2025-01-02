@@ -1,7 +1,7 @@
 {
 	"name": "bujo-bullets",
 	"version": "1.0.1",
-	"description": "Alternate checkbox types for Obsidian to support Bullet Journal bullets",
+	"description": "Alternate checkbox types to support Bullet Journal bullets",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
