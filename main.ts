@@ -59,34 +59,35 @@ export default class BuJoPlugin extends Plugin {
                   return
                 }
 
-                const fileContent = await vault.read(file)
-                const fileLines = fileContent.split('\n')
-                let bulletCount = 0
-                let bulletIndex = -1
-                let fileLineIndex = -1
-                for (let i = 0; i < fileLines.length; i++) {
-                  fileLineIndex++
-                  if (fileLines[i].trim().startsWith('- [')) {
-                    if (bulletCount.toString() === bulletId) {
-                      bulletIndex = i
-                      break
+                vault.process(file, (data) => {
+                  const lines = data.split('\n')
+                  let bulletCount = 0
+                  let bulletIndex = -1
+                  let lineIndex = -1
+                  for (let i = 0; i < lines.length; i++) {
+                    lineIndex++
+                    if (lines[i].trim().startsWith('- [')) {
+                      if (bulletCount.toString() === bulletId) {
+                        bulletIndex = i
+                        break
+                      }
+                      bulletCount++
                     }
-                    bulletCount++
                   }
-                }
 
-                if (bulletIndex === -1) {
-                  console.error('Bullet not found')
-                  return
-                }
+                  if (bulletIndex === -1) {
+                    console.error('Bullet not found')
+                    return data
+                  }
 
-                const updatedFileLines =[
-                  ...fileLines.slice(0, fileLineIndex),
-                  fileLines[bulletIndex].replace(/- \[.\]/, `- [${type.character}]`),
-                  ...fileLines.slice(bulletIndex + 1)
-                ]
-                
-                await vault.modify(file, updatedFileLines.join('\n'))
+                  const updatedLines = [
+                    ...lines.slice(0, lineIndex),
+                    lines[bulletIndex].replace(/- \[.\]/, `- [${type.character}]`),
+                    ...lines.slice(bulletIndex + 1)
+                  ]
+
+                  return updatedLines.join('\n')
+                });
               })
             })
           }
