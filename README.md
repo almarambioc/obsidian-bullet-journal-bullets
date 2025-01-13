@@ -1,4 +1,4 @@
-# Obsidian BuJo Bullets
+# BuJo Bullets
 
 Alternate checkbox types for Obsidian to support [Bullet Journal bullets](https://bulletjournal.com/blogs/faq/what-is-rapid-logging-understand-rapid-logging-bullets-and-signifiers).
 
