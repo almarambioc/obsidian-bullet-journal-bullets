@@ -6,6 +6,7 @@ Alternate checkbox types for Obsidian to support [Bullet Journal bullets](https:
 
 - [x] Custom rendering of Bullet Journal styled checkboxes
 - [x] Right-click menu to update bullet type
+- [x] Obsidian commands and hotkeys to update bullet type
 
 ## Installation
 
@@ -19,6 +20,8 @@ Follow the steps below to install BuJo Bullets.
 
 BuJo Bullets adds support for the following bullet types:
 ```markdown
+- [ ] incomplete task
+- [x] completed task
 - [-] irrelevant task
 - [>] migrated task
 - [<] scheduled task
@@ -27,6 +30,24 @@ BuJo Bullets adds support for the following bullet types:
 
 When in Obsidian's reading mode, the bullets will be displayed using the following icons:
 ![BuJo Bullets icons](/docs/images/rendered-bullets.png)
+
+### Right-click Menu
+You can right-click on any of the supported bullet types to open a context menu that will allow you to change the bullet type.
+![BuJo Bullets context menu](/docs/images/context-menu.png)
+
+### Commands and Hotkeys
+This plugin also provides Obsidian commands and hotkeys to change the bullet type of the current line.
+![BuJo Bullets commands](/docs/images/command-palette.png)
+
+Per [Obsidian's recommendations](https://docs.obsidian.md/Plugins/User+interface/Commands#Hot+keys) default hotkey values are not set, but here are some suggestions:
+- Change to "incomplete task" - `Ctrl/Cmd + I`
+- Change to "completed task" - `Ctrl/Cmd + D`
+- Change to "irrelevant task" - `Ctrl/Cmd + ~`
+- Change to "migrated task" - `Ctrl/Cmd + >`
+- Change to "scheduled task" - `Ctrl/Cmd + <`
+- Change to "event" - `Ctrl/Cmd + shift + o`
+
+Keep in mind, for "incomplete task" and "completed task" types you can use Obsidian's default hotkey for toggling checkboxes: `Ctrl/Cmd + L`
 
 ## License
 

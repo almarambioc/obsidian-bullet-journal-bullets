@@ -1,11 +1,13 @@
-import { App, Editor, MarkdownView, Menu, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { Menu, Plugin } from 'obsidian';
+import { CommandHandler } from './handlers/command-handler';
+import { isBulletText, updateBulletType } from './core/bullet-utils';
 
-type Bullet = {
+export type Bullet = {
   name: string
   character: string
 }
 
-const AVAILABLE_BULLETS_TYPES: Bullet[] = [
+export const AVAILABLE_BULLETS_TYPES: Bullet[] = [
   { name: 'Incomplete', character: ' ' },
   { name: 'Complete', character: 'x' },
   { name: 'Irrelevant', character: '-' },
@@ -15,6 +17,8 @@ const AVAILABLE_BULLETS_TYPES: Bullet[] = [
 ]
 
 export default class BuJoPlugin extends Plugin {
+  commandHandler: CommandHandler;
+
   async onload() {
     this.registerMarkdownPostProcessor((element, context) => {
       const renderedBullets = element.findAll('.task-list-item')
@@ -66,7 +70,7 @@ export default class BuJoPlugin extends Plugin {
                   let lineIndex = -1
                   for (let i = 0; i < lines.length; i++) {
                     lineIndex++
-                    if (lines[i].trim().startsWith('- [')) {
+                    if (isBulletText(lines[i])) {
                       if (bulletCount.toString() === bulletId) {
                         bulletIndex = i
                         break
@@ -82,7 +86,7 @@ export default class BuJoPlugin extends Plugin {
 
                   const updatedLines = [
                     ...lines.slice(0, lineIndex),
-                    lines[bulletIndex].replace(/- \[.\]/, `- [${type.character}]`),
+                    updateBulletType(lines[bulletIndex], type),
                     ...lines.slice(bulletIndex + 1)
                   ]
 
@@ -96,5 +100,7 @@ export default class BuJoPlugin extends Plugin {
         })
       }
     })
+
+    this.commandHandler = new CommandHandler(this);
   }
 }
