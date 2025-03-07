@@ -1,0 +1,87 @@
+import BuJoPlugin from "./index";
+import { App, PluginSettingTab, Setting } from "obsidian";
+
+export interface BuJoPluginSettings {
+  signifiers: Signifier[];
+}
+
+interface Signifier {
+  name: string;
+  value: string;
+}
+
+export const DEFAULT_SETTINGS: Partial<BuJoPluginSettings> = {
+  signifiers: [
+    { name: "Priority", value: "*" },
+    { name: "Idea", value: "!" },
+  ]
+};
+
+export class BuJoPluginSettingTab extends PluginSettingTab {
+  plugin: BuJoPlugin;
+
+  constructor(app: App, plugin: BuJoPlugin) {
+    super(app, plugin);
+    this.plugin = plugin;
+  }
+
+  display(): void {
+    this.containerEl.empty();
+
+    this.add_signifiers_setting();
+  }
+
+
+  add_signifiers_setting(): void {
+    new Setting(this.containerEl).setName("Signifiers").setHeading();
+
+    const desc = document.createDocumentFragment();
+    desc.append(
+        "Signifiers are symbols that give your bullets added context. For example, you can use a star (*) to indicate a priority task or a exclamation mark (!) to indicate an idea note. (ex: - [ ] * Priority task)"
+    );
+    new Setting(this.containerEl).setDesc(desc);
+
+    this.plugin.settings.signifiers.forEach((signifier, index) => {
+      const sig = new Setting(this.containerEl)
+        .addText((cb) => {
+          cb.setPlaceholder("Enter signifier")
+            .setValue(signifier.value)
+            .onChange(async (value) => {
+              this.plugin.settings.signifiers[index].value = value;
+              await this.plugin.saveSettings();
+            })
+        })
+        .addText((cb) => {
+          cb.setPlaceholder("Enter name")
+            .setValue(signifier.name)
+            .onChange(async (value) => {
+              this.plugin.settings.signifiers[index].name = value;
+              await this.plugin.saveSettings();
+            })
+        })
+        .addExtraButton((cb) => {
+          cb.setIcon("cross")
+            .setTooltip("Remove signifier")
+            .onClick(async () => {
+              this.plugin.settings.signifiers.splice(index, 1);
+              await this.plugin.saveSettings();
+              // Force refresh
+              this.display();
+            });
+        });
+      sig.settingEl.addClass("bujo-signifier");
+      sig.infoEl.remove();
+    });
+
+    new Setting(this.containerEl).addButton((cb) => {
+      cb.setButtonText("Add new signifier")
+        .setCta()
+        .onClick(async () => {
+            this.plugin.settings.signifiers.push({ name: "", value: "" });
+            await this.plugin.saveSettings();
+            // Force refresh
+            this.display();
+        });
+  });
+  }
+}

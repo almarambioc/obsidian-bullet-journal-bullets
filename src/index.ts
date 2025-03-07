@@ -1,6 +1,11 @@
 import { Menu, Plugin } from 'obsidian';
 import { CommandHandler } from './handlers/command-handler';
 import { isBulletText, updateBulletType } from './core/bullet-utils';
+import {
+  BuJoPluginSettings,
+  BuJoPluginSettingTab,
+  DEFAULT_SETTINGS
+} from './settings';
 
 export type Bullet = {
   name: string
@@ -17,9 +22,13 @@ export const AVAILABLE_BULLETS_TYPES: Bullet[] = [
 ]
 
 export default class BuJoPlugin extends Plugin {
+  settings: BuJoPluginSettings;
   commandHandler: CommandHandler;
 
   async onload() {
+    await this.loadSettings();
+    this.commandHandler = new CommandHandler(this);
+
     this.registerMarkdownPostProcessor((element, context) => {
       const renderedBullets = element.findAll('.task-list-item')
       if (renderedBullets.length === 0) {
@@ -100,7 +109,14 @@ export default class BuJoPlugin extends Plugin {
         })
       }
     })
+  }
 
-    this.commandHandler = new CommandHandler(this);
+  async loadSettings() {
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    this.addSettingTab(new BuJoPluginSettingTab(this.app, this));
+  }
+
+  async saveSettings() {
+    await this.saveData(this.settings);
   }
 }
