@@ -1,6 +1,7 @@
 import { Menu, Plugin } from 'obsidian';
 import { CommandHandler } from './handlers/command-handler';
 import { isBulletText, updateBulletType } from './core/bullet-utils';
+import * as DOMPurify from 'isomorphic-dompurify';
 import {
   BuJoPluginSettings,
   BuJoPluginSettingTab,
@@ -29,17 +30,43 @@ export default class BuJoPlugin extends Plugin {
     await this.loadSettings();
     this.commandHandler = new CommandHandler(this);
 
-    this.registerMarkdownPostProcessor((element, context) => {
-      const renderedBullets = element.findAll('.task-list-item')
+    this.registerMarkdownPostProcessor((element, _context) => {
+      const renderedNotes = element.findAll('ul > li')
+      const renderedCheckboxes = element.findAll('.task-list-item')
+      const renderedBullets = [...renderedNotes, ...renderedCheckboxes]
+
       if (renderedBullets.length === 0) {
         return
       }
 
-      renderedBullets.forEach((bullet, index) => {
+      // Process signifiers
+      for (let bullet of renderedBullets) {
+        const bulletText = bullet.innerText
+        const signifiers = this.settings.signifiers;
+        
+        for (let signifier of signifiers) {
+          const signifierText = signifier.value;
+
+          if (bulletText.startsWith(signifierText + ' ')) {
+            let html = bullet.innerHTML;
+            let sanitizedText = DOMPurify.sanitize(signifierText);
+            
+            html = html.replace(signifierText, `<span class="bujo-bullet-signifier">${sanitizedText}</span>`);
+            bullet.innerHTML = html
+          }
+        }
+      }
+
+      // Process checkboxes
+      if (renderedCheckboxes.length === 0) {
+        return
+      }
+
+      renderedCheckboxes.forEach((bullet, index) => {
         bullet.setAttribute('data-bullet-id', index.toString())
       })
 
-      for (const bullet of renderedBullets) {
+      for (const bullet of renderedCheckboxes) {
         const bulletTaskValue = bullet.getAttribute('data-task')
         const bulletType = !bulletTaskValue
           ? AVAILABLE_BULLETS_TYPES.find((type) => type.character === ' ')

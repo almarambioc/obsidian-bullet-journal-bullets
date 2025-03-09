@@ -37,7 +37,15 @@ export class BuJoPluginSettingTab extends PluginSettingTab {
 
     const desc = document.createDocumentFragment();
     desc.append(
-        "Signifiers are symbols that give your bullets added context. For example, you can use a star (*) to indicate a priority task or a exclamation mark (!) to indicate an idea note. (ex: - [ ] * Priority task)"
+        "Signifiers are symbols that give your bullets added context. For example, you can use an exclamation mark (!) to indicate a priority task or a question mark (?) to indicate a question to follow up on. Examples:",
+        desc.createEl("br"),
+        "- [ ] ! Priority task",
+        desc.createEl("br"),
+        "- ? Follow up on this idea",
+        desc.createEl("br"),
+        desc.createEl("br"),
+        desc.createEl("b", { text: "Warning: " }),
+        "The asterisk (*) signifier cannot be used as a signifier because of limitations in the Obsidian Markown renderer. Using it will cause a double bullet to appear in the rendered view."
     );
     new Setting(this.containerEl).setDesc(desc);
 
@@ -69,7 +77,6 @@ export class BuJoPluginSettingTab extends PluginSettingTab {
               this.display();
             });
         });
-      sig.settingEl.addClass("bujo-signifier");
       sig.infoEl.remove();
     });
 

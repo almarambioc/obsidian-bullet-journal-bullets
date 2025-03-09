@@ -31,6 +31,14 @@ BuJo Bullets adds support for the following bullet types:
 When in Obsidian's reading mode, the bullets will be displayed using the following icons:
 ![BuJo Bullets icons](/docs/images/rendered-bullets.png)
 
+## Signifiers
+
+This plugin also allows you to add signifiers to your bullets. Signifiers are added to the start of any bullet and are highlighted to help you quickly identify added context.
+![BuJo Bullets signifiers](/docs/images/signifiers.png)
+
+By default, the exclamation point `!` and the question mark `?` are supported as signifiers. You can update these and/or add your own signifiers by updating the plugin settings.
+![BuJo Bullets signifiers settings](/docs/images/settings-signifiers.png)
+
 ### Right-click Menu
 You can right-click on any of the supported bullet types to open a context menu that will allow you to change the bullet type.
 ![BuJo Bullets context menu](/docs/images/context-menu.png)

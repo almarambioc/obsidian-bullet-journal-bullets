@@ -84,17 +84,6 @@ li[data-task="o"] > p > input {
   }
 }
 
-/* Settings */
-.bujo-signifier {
-  display: flex;
-  justify-content: space-between;
-}
-
-// inputs should try to fill, buttons should not
- input {
-  flex: 1;
-}
-
-.bujo-signifier .extra-setting-button {
-  flex: 0;
+.bujo-bullet-signifier {
+  color: var(--text-error);
 }
