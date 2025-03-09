@@ -12,8 +12,8 @@ interface Signifier {
 
 export const DEFAULT_SETTINGS: Partial<BuJoPluginSettings> = {
   signifiers: [
-    { name: "Priority", value: "*" },
-    { name: "Idea", value: "!" },
+    { name: "Priority", value: "!" },
+    { name: "Follow-up", value: "?" },
   ]
 };
 
